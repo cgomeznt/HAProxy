@@ -41,7 +41,7 @@ Algo que gusta mucho de [HAProxy](http://www.haproxy.org/ "http://www.haproxy.or
 
 En este laboratorio solo vamos a instalar un solo frontend [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/"), que haga balanceo de carga y distribuya las solicitudes de HTTP hacia dos backends, que verifique si alguno de los backends esta inoperativo y que por supuesto puede identificar las sesiones de los usuarios y sean redireccionados nuevamente al backend que le esta atendiendo dicha sesion.
 
-![Texto alternativo](images/topologia.jpg "Topología de la red de pruebas")
+![Texto alternativo](images/topologia.png "Topología de la red de pruebas")
 
 En resumen esto es lo que vamos a tener con [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/"):
 - Sobre carga en los backends, para balancear los recursos entre ellos.
@@ -134,7 +134,7 @@ Editamos el archivo de configuración
 		bind 192.168.1.20:80
 		default_backend servidores
 		# ACL que permite las siguiente estensiones en la url_static
-		acl url_static path_end	.gif .png .jpg
+		acl url_static path_end	.gif .png .png
 		# Se indica que backend atendera las url_static
 		use_backend servidorestatico if url_static
 
@@ -163,7 +163,7 @@ Reiniciamos el servicio
 
 Vamos al navegador de nuestro HOST y colocamos "192.168.1.20/stats" coloca el usuario y el password que configurastes en el archivo haproxy.cfg
 
-![Texto alternativo](images/Selección_001.jpg "haproxy stats")
+![Texto alternativo](images/Selección_001.png "haproxy stats")
 
 **Configuración del servidor backend1**
 
@@ -199,7 +199,7 @@ Luego procedemos a instalar los paquetes requeridos
 
 Vamos al navegador de nuestro HOST y colocamos "192.168.1.21" ya sabes que debe ver el "work ...!!!"
 
-![Texto alternativo](images/Selección_001.jpg "haproxy stats")
+![Texto alternativo](images/Selección_001.png "haproxy stats")
 
 
 **Configuración del servidor backend2**
@@ -349,7 +349,7 @@ X-Forwarded-for: 192.168.1.46
 
 Desde el HOST Tambien desde nuestro HOST en un navegador se puede colocar http://192.168.1.20/stats y deben ver como esta en rojo el backend1
 
-![Texto alternativo](images/Selección_003.jpg "haproxy stats")
+![Texto alternativo](images/Selección_003.png "haproxy stats")
 
 Iniciamos nuevamente el servicio en el backend1
 ```
@@ -467,11 +467,11 @@ Ejecutelo tantas veces como usted quiera y vea como pasandole la misma cookie el
 
 Desde desde el HOST en un navegador se puede colocar http://192.168.1.20/sesiones.php y se pulsa F5 varias veces
 
-![Texto alternativo](images/Selección_004.jpg "haproxy stats")
+![Texto alternativo](images/Selección_004.png "haproxy stats")
 
 Luego de pulsar varias veces F5
 
-![Texto alternativo](images/Selección_005.jpg "haproxy stats")
+![Texto alternativo](images/Selección_005.png "haproxy stats")
 
 Les dejo otra tecnica con el comando ``curl``
 Primero capturamos la cookie y la guardamos en un archivo 
@@ -651,10 +651,10 @@ Realicemos nuevamente la prueba y veamos como ahora reutiliza la conexión, anal
 
 **Pruebas de URL staticas**
 
-Ya teniamos configurado en el servidor de haproxy un ACL para que las solicitudes de los archivos del tipo .gif .png .jpg sean buscados en un backend3. en el archivo /etc/haproxy/haproxy.cfg
+Ya teniamos configurado en el servidor de haproxy un ACL para que las solicitudes de los archivos del tipo .gif .png .png sean buscados en un backend3. en el archivo /etc/haproxy/haproxy.cfg
 ```
 		# ACL que permite las siguiente estensiones en la url_static
-		acl url_static path_end	.gif .png .jpg
+		acl url_static path_end	.gif .png .png
 		# Se indica que backend atendera las url_static
 		use_backend servidorestatico if url_static
 
@@ -686,17 +686,17 @@ En el backend1
 
 Desde desde el HOST en un navegador se puede colocar http://192.168.1.20/static.html y pulsa F5 varias veces
 
-![Texto alternativo](images/Selección_007.jpg "haproxy stats")
+![Texto alternativo](images/Selección_007.png "haproxy stats")
 
-![Texto alternativo](images/Selección_008.jpg "haproxy stats")
+![Texto alternativo](images/Selección_008.png "haproxy stats")
 
 Detenga el adaptador de red en backend3 y vuelva a probar http://192.168.1.20/static.html y pulsa F5 varias veces
 ```
 	# ifdown eth0
 ```
-![Texto alternativo](images/Selección_009.jpg "haproxy stats")
+![Texto alternativo](images/Selección_009.png "haproxy stats")
 
-![Texto alternativo](images/Selección_010.jpg "haproxy stats")
+![Texto alternativo](images/Selección_010.png "haproxy stats")
 
 
 **Ver los log y el tcpdump**
