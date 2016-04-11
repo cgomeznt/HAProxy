@@ -1,14 +1,8 @@
 ## Balance de carga con HAProxy
 
-HAProxy es una solución gratuita , muy rápido y fiable que ofrece alta disponibilidad , balanceo de carga y el proxy para TCP y aplicaciones basadas en HTTP. Es especialmente adecuado para los sitios web de muy alto tráfico y las más visitadas del mundo. Con los años se ha convertido en el software balanceador de carga favorito de las distribuciones GNU/Linux, ahora se incluye con la mayoría de las distribuciones de Linux y con frecuencia se despliega por defecto en plataformas en la nube. HAProxy no se hace publicidad, sólo se sabe cuando los administradores informan de ella :-)
+[HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") es una solución gratuita , muy rápido y fiable que ofrece alta disponibilidad , balanceo de carga y el proxy para TCP y aplicaciones basadas en HTTP. Es especialmente adecuado para los sitios web de muy alto tráfico y las más visitadas del mundo. Con los años se ha convertido en el software balanceador de carga favorito de las distribuciones GNU/Linux, ahora se incluye con la mayoría de las distribuciones de Linux y con frecuencia se despliega por defecto en plataformas en la nube. [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") no se hace publicidad, sólo se sabe cuando los administradores informan de ella :-)
 
-#### Principales características
-
-Cada versión trae su conjunto de características nuevas más las características anteriores. La compatibilidad es un aspecto muy importante de HAProxy, incluso la ultima versión estable (1.5) es capaz de funcionar con configuraciones hechas para la versión 1.0 hace de 13 años. Las características más diferenciadoras de cada versión se enumeran a continuación:
-
-- **versión 1.5**, lanzado en el 2014, esta versión amplía aún más la 1.4 con 4 años de duro trabajo: soporte SSL nativa en ambos lados con SNI/NPN/ALPN y OCSP, IPv6 y UNIX sockets están soportados, HTTP completa keep-alive para un mejor apoyo de NTLM y la mejora de la eficiencia en las granjas estáticas, HTTP/1.1 compression (deflate, gzip) para ahorrar ancho de banda, PROXY protocol versión 1 y 2 en ambos lados, data sampling sobre todo en la petición o respuesta, incluyendo la carga útil, las ACL pueden utilizar cualquier método de emparejamiento con cualquier mapas de muestra de entrada y ACL dinámico, actualizables con la ayuda del CLI stick-tables para realizar un seguimiento de la actividad en cualquier formato personalizado muestra de entrada para los registros de identificador único, cabecera de reescritura y redirecciones, mejora de controles de salud (SSL, script TCP, agentes de prueba, ... ), mucho más escalable la configuración, es compatible con cientos de miles de backends y certificados sin sudar.
-- **versión 1.4**, lanzado en 2010, esta versión trae nuevas características sobre la 1.3, fueron muy esperados: Client-side keep-alive para reducir el tiempo de cargar las páginas pesadas para los clientes sobre la red, TCP speedups para ayudar al stack de TCP ahorrar unos cuantos paquetes por conexión, response buffering para un número aún menor de conexiones simultáneas en los servidores, soporte para el protocolo RDP con la rigidez del servidor y el filtrado de usuario, source-based stickiness para adjuntar una dirección de origen a un servidor, un medio mucho mejor las estadísticas interfaz de informes de toneladas de información útil, controles de salud más detallados informes ed estados precisas y respuestas en las estadísticas y de los registros, la salud provocada por el tráfico de ayunar-falla un servidor por encima de un umbral de error determinado, soporte para la autenticación HTTP para cualquier solicitud incluyendo las estadísticas, con el apoyo de cifrado de la contraseña, gestión de servidor desde la línea de comandos para activar / desactivar y cambiar el peso de un servidor sin necesidad de reiniciar la persistencia haproxy, basada en ACL para mantener o desactivar la persistencia basada en ACL, sin tener en cuenta el estado del servidor, ingrese analizador para generar informes rápidos de los registros analizados en 1 Gbyte / s,
-- **versión 1.3**, lanzado en 2006, esta versión ha traído un montón de nuevas características y mejoras de más que la 1,2 , intercambio de contenido para seleccionar un grupo de servidores basados ​​en cualquier criterio de solicitud, ACL para escribir reglas de cambio de contenido, mayor variedad de algoritmos de equilibrio de carga para una mejor integración, inspección de contenidos que permite bloquear protocolos inesperados, proxy transparente en Linux, que permite conectar directamente con el servidor utilizando la dirección IP del cliente, empalme kernel TCP para enviar datos entre los dos lados sin copia, con el fin de llegar a los datos de varios gigabits tarifas, tomas de diseño separación en capas, TCP y HTTP para el procesamiento más robusto y más rápido procesamiento y evoluciones más fácil, rápido y justo programador que permite mejor calidad de servicio mediante la asignación de prioridades para algunas tareas, tasa sesión limitante para entornos colocated, etc ...
+Algo que se debe tomar en cuenta es: En Seguridad - Ni siquiera una intrusión en 13 años.
  
 ### Plataforma soportada
 - Linux 2.4 on x86, x86_64, Alpha, Sparc, MIPS, PARISC
@@ -29,15 +23,15 @@ Hay 3 factores importantes que se utilizan para medir el rendimiento de un balan
 
 Si [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") detecta la caída de algun servicio o servidor, puede optar por no enviarle más peticiones.
 
-[HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") no es un cluster o HA. Para eso lo puede integrar con corosyn y pacemaker
+[HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") no es un cluster o HA. Para eso lo puede integrar con keepalived, hearbeat, corosyn y pacemaker
 
 Con [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") vamos a  distribuir las peticiones de los clientes de forma equitativa entre distintos servidores de "backend" (termino muy utilizado por HAProxy). Un   servidor backend: puede ser servidor web, que reciba las solicitudes del frontend (termino muy utilizado por HAProxy). Un frontend se le llama al [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") que atendera las solicitudes de los clientes y se las envia a los backends.
 
 Con [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") puede detectar la carga de los backends y distribuir las peticiones de forma equitativa para evitar sobrecarga. También nosotros le podemos indicar cual sera el porcentaje de carga para los backends. Este mecanismo también se utiliza para identificar si un backend esta fuera de servicio y de esta forma no se le envía peticiones.
 
-Una forma de balancear carga de forma muy simple y económica es Roundrobin por DNS, pero esto no esta bien cuando se tiene altas cargas de peticiones y se requiere una mínima perdida de peticiones, es decir, un balanceador puede tener en cuenta la carga de cada backend y distribuir las peticiones según la carga que tenga el backend, mientras que al Roundrobin por DNS no tiene en cuenta la carga de los backends y por lo tanto se envían paquetes que comienzan a producir time outs y lentitud. Además, si un backend queda inoperativo el Roundrobin por DNS no sera capaz de identificar esto y se producirán nuevamente perdida de paquetes time outs y lentitud.
+Una forma de balancear muy simple y económica es Roundrobin por DNS, pero esto no esta bien cuando se tiene altas cargas de peticiones y se requiere una mínima perdida de peticiones, es decir, un balanceador puede tener en cuenta la carga de cada backend y distribuir las peticiones según la carga que tenga el backend, mientras que al Roundrobin por DNS no tiene en cuenta la carga de los backends y por lo tanto se envían paquetes que comienzan a producir time outs y lentitud. Además, si un backend queda inoperativo el Roundrobin por DNS no sera capaz de identificar esto y se producirán nuevamente perdida de paquetes, time outs y lentitud.
 
-Algo que gusta mucho de [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/"), pueden mantener las sesiones de los usuarios, de forma que un usuario que inicia sesión en un backend "A" siempre sea dirigido por el [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") al mismo backend "A". El Roundrobin por DNS no es capaz de mantener sesiones, por lo que siempre el  usuario pierde la sesión.
+Algo que gusta mucho de [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/"), pueden mantener las sesiones de los usuarios, de forma que un usuario que inicia sesión en un backend "A" siempre sera dirigido por el [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/") al mismo backend "A". El Roundrobin por DNS no es capaz de mantener sesiones, por lo que siempre el usuario pierde la sesión.
 
 En este laboratorio solo vamos a instalar un solo frontend [HAProxy](http://www.haproxy.org/ "http://www.haproxy.org/"), que haga balanceo de carga y distribuya las solicitudes de HTTP hacia dos backends, que verifique si alguno de los backends esta inoperativo y que por supuesto puede identificar las sesiones de los usuarios y sean redireccionados nuevamente al backend que le esta atendiendo dicha sesión.
 
@@ -274,8 +268,7 @@ Vamos al navegador de nuestro HOST y colocamos "192.168.1.22" ya sabes que debe 
 
 #### Pruebas de balanceo y failover
 
-Probemos el balanceo
-En los servidores backend1 y backend2 vamos a crear el siguiente script PHP.
+Probemos el balanceo. En los servidores backend1 y backend2 vamos a crear el siguiente script PHP.
 ```
 	# vi /var/www/html/prueba.php
 
@@ -287,7 +280,7 @@ En los servidores backend1 y backend2 vamos a crear el siguiente script PHP.
 	?>
 ```
 
-Ahora desde nuestro HOST vamos a utilizar al comando ``curl`` apuntando hacia el servidor haproxy y este debe balancear hacia los servidores backends y con la ayuda del script PHP iremos identificando y analizando. lo ejecutamos varias veces.
+Ahora desde nuestro HOST vamos a utilizar al comando ``curl`` apuntando hacia el servidor haproxy y este debe balancear hacia los servidores backends y con la ayuda del script PHP iremos identificando y analizando. Ejecutar el script varias veces.
 También desde nuestro HOST en un navegador se puede colocar http://192.168.1.20/prueba.php y se pulsa F5 varias veces
 ```
 	# curl http://192.168.1.20/prueba.php
@@ -319,8 +312,7 @@ También desde nuestro HOST en un navegador se puede colocar http://192.168.1.20
 
 Se pudo observar como HAProxy alterno las solicitudes entre nuestros backends. X-Forwarded-For es la IP de tu HOST.
 
-Probemos el failover
-En el backend1 detenemos el servicio de apache.
+Probemos el failover. En el backend1 detenemos el servicio de apache.
 ```
 	# /etc/init.d/apache2 stop
 ```
@@ -349,7 +341,7 @@ Ejecuten el comando ``curl`` nuevamente y varias veces desde su HOST.
 
 ```
 
-Desde el HOST También desde nuestro HOST en un navegador se puede colocar http://192.168.1.20/stats y deben ver como esta en rojo el backend1
+Desde el HOST en un navegador se puede colocar http://192.168.1.20/stats y deben ver como esta en rojo el backend1
 
 ![Texto alternativo](images/Selección_003.png "haproxy stats")
 
@@ -360,9 +352,9 @@ Iniciamos nuevamente el servicio en el backend1
 
 #### Pruebas de sesiones de usuarios
 
-Recuerden que en HAProxy configuramos que "Cookie Prefix Method" hay otros métodos como "Cookie insert method" pero aquí solo vamos a utilizar "Cookie Prefix Method". Mucho cuidado con esto porque dependiendo si es PHP, ASP, etc. usted deberá escoger el método de cookie.
+Recuerden que en HAProxy configuramos el "Cookie Prefix Method" hay otros métodos como "Cookie insert method" pero aquí solo vamos a utilizar "Cookie Prefix Method". Mucho cuidado con esto porque dependiendo si es PHP, ASP, etc. usted deberá escoger el método de cookie.
 
-Vamos a crear el siguiente script PHP en los servidores backend1 y backend2, este scrip PHP nos ayuda a crear un simple sesión, luego ver con esa sesión cuantas veces se hacen peticiones y para evidenciar que HAProxy nos direcciona nuevamente para el backend en donde se creo la sesión.
+Vamos a crear el siguiente script PHP en los servidores backend1 y backend2, este scrip PHP nos ayuda a crear un simple sesión con su cookie, luego ver con esa sesión cuantas veces se hacen peticiones y para evidenciar que HAProxy nos direcciona nuevamente para el backend en donde se creo la sesión.
 ```
 	# vi /var/www/html/sesiones.php
 	<?php
@@ -386,7 +378,8 @@ Vamos a crear el siguiente script PHP en los servidores backend1 y backend2, est
 ```
 
 Desde nuestro HOST vamos a utilizar al comando ``curl`` apuntando hacia el servidor haproxy y este debe balancear hacia los servidores backends, luego de establecer una sesión veremos como HAProxy continua enviando nuestras peticiones hacia el backend en donde se creo la sesión. Con la ayuda del script PHP iremos identificando y analizando.
-También desde nuestro HOST en un navegador se puede colocar http://192.168.1.20/sesiones.php y se pulsa F5 varias veces
+También desde nuestro HOST en un navegador se puede colocar http://192.168.1.20/sesiones.php y se pulsa F5 varias veces.
+
 Ejecutemos una primera vez
 ```
 	# curl -i http://192.168.1.20/sesiones.php
@@ -673,7 +666,7 @@ En el servidor que atenderá las peticiones estáticas, el backend3 descargue un
 	# wget http://www.haproxy.org/img/logo-med.png
 ```
 
-Ahora en los servidores backend1 y backend3 vamos a crear un simple archivo HTML, pero identifíquelo con el nombre del servidor en donde lo creo.
+Ahora en los servidores backend1 y backend2 vamos a crear un simple archivo HTML, pero identifíquelo con el nombre del servidor en donde lo creo.
 En el backend1
 ```
 	# vi /var/www/html/static.html
@@ -681,6 +674,18 @@ En el backend1
 	<body>
 	<h1>Pagina Estatica</h1>
 	<h3>Servidor backend1</h3>
+	<img src="logo-med.png" >
+	</body>
+	</html>
+```
+
+En el backend2
+```
+	# vi /var/www/html/static.html
+	<html>
+	<body>
+	<h1>Pagina Estatica</h1>
+	<h3>Servidor backend2</h3>
 	<img src="logo-med.png" >
 	</body>
 	</html>
