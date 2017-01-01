@@ -2,6 +2,7 @@ Balanceador de carga como primera defensa contra ddos
 ========================================================
 
 Link original
+
 http://blog.haproxy.com/2012/02/27/use-a-load-balancer-as-a-first-row-of-defense-against-ddos/
 
 FEBRUARY 27, 2012 BAPTISTE ASSMANN	41 COMMENTS
@@ -87,9 +88,8 @@ For example::
 	  balance roundrobin
 	  server srv1 192.168.1.2:80 check maxconn 1000
 	  server srv2 192.168.1.3:80 check maxconn 1000
-	To test this configuration, simply open a telnet to the frontend port and wait for 5 seconds:
 
-::
+To test this configuration, simply open a telnet to the frontend port and wait for 5 seconds::
 
 	telnet 127.0.0.1 8080
 	Trying 127.0.0.1...
@@ -467,11 +467,14 @@ Notes
 +++++++++
 
 We could combine configuration example above together to improve protection. This will be described later in an other article
+
 The numbers provided in the examples may be different for your application and architecture. Bench your configuration properly before applying in production.
+
 Related articles
 Fight spam with early talking detection
 Protect Apache against Apache-killer script
 Protect your web server against slowloris
+
 Links
 HAProxy Technologies
 Aloha load balancer: HAProxy based LB appliance
