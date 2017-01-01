@@ -264,7 +264,7 @@ Luego procedemos a instalar los paquetes requeridos
 
 Vamos al navegador de nuestro HOST y colocamos "192.168.1.22" ya sabes que debe ver el "work ...!!!"
 
-![Texto alternativo](images/apache.png "haproxy stats")
+![Texto alternativo](../images/apache.png "haproxy stats")
 
 #### Pruebas de balanceo y failover
 
@@ -343,7 +343,7 @@ Ejecuten el comando ``curl`` nuevamente y varias veces desde su HOST.
 
 Desde el HOST en un navegador se puede colocar http://192.168.1.20/stats y deben ver como esta en rojo el backend1
 
-![Texto alternativo](images/Selección_003.png "haproxy stats")
+![Texto alternativo](../images/Selección_003.png "haproxy stats")
 
 Iniciamos nuevamente el servicio en el backend1
 ```
@@ -462,11 +462,11 @@ Ejecútelo tantas veces como usted quiera y vea como pasándole la misma cookie 
 
 Desde desde el HOST en un navegador se puede colocar http://192.168.1.20/sesiones.php y se pulsa F5 varias veces
 
-![Texto alternativo](images/Selección_004.png "haproxy stats")
+![Texto alternativo](../images/Selección_004.png "haproxy stats")
 
 Luego de pulsar varias veces F5
 
-![Texto alternativo](images/Selección_005.png "haproxy stats")
+![Texto alternativo](../images/Selección_005.png "haproxy stats")
 
 Les dejo otra tecnica con el comando ``curl``
 Primero capturamos la cookie y la guardamos en un archivo 
@@ -693,17 +693,17 @@ En el backend2
 
 Desde desde el HOST en un navegador se puede colocar http://192.168.1.20/static.html y pulsa F5 varias veces
 
-![Texto alternativo](images/Selección_007.png "haproxy stats")
+![Texto alternativo](../images/Selección_007.png "haproxy stats")
 
-![Texto alternativo](images/Selección_008.png "haproxy stats")
+![Texto alternativo](../images/Selección_008.png "haproxy stats")
 
 Detenga el adaptador de red en backend3 y vuelva a probar http://192.168.1.20/static.html y pulsa F5 varias veces
 ```
 	# ifdown eth0
 ```
-![Texto alternativo](images/Selección_009.png "haproxy stats")
+![Texto alternativo](../images/Selección_009.png "haproxy stats")
 
-![Texto alternativo](images/Selección_010.png "haproxy stats")
+![Texto alternativo](../images/Selección_010.png "haproxy stats")
 
 
 #### Ver los log y el tcpdump
