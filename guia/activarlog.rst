@@ -2,7 +2,7 @@
 Activar el LOG en Haproxy
 ===================
 
-Editar el archivo /etc/haproxy/haproxy.cfg y agregar la line "log         127.0.0.1 local2"
+Editar el archivo /etc/haproxy/haproxy.cfg y agregar la line "log         127.0.0.1 local2"::
 
 	# vi /etc/haproxy/haproxy.cfg
 		[...]
