@@ -6,7 +6,7 @@ y sea capaz de hacer el forward un servidor en donde estan los VHOST y le pase e
 de esta forma el VHOST podra saber cual es el ServerName que le corresponde
 
 
-::
+Este es el archvio de configuración::
     
     [root@srv-haproxy-02 haproxy]# cat haproxy.cfg
     #---------------------------------------------------------------------
@@ -16,7 +16,6 @@ de esta forma el VHOST podra saber cual es el ServerName que le corresponde
     #   https://www.haproxy.org/download/1.8/doc/configuration.txt
     #
     #---------------------------------------------------------------------
-    
     #---------------------------------------------------------------------
     # Global settings
     #---------------------------------------------------------------------
@@ -35,21 +34,17 @@ de esta forma el VHOST podra saber cual es el ServerName que le corresponde
         #    local2.*                       /var/log/haproxy.log
         #
         log         127.0.0.1 local2
-    
         chroot      /var/lib/haproxy
         pidfile     /var/run/haproxy.pid
         maxconn     4000
         user        haproxy
         group       haproxy
         daemon
-    
         # turn on stats unix socket
         stats socket /var/lib/haproxy/stats
-    
         # utilize system-wide crypto-policies
         ssl-default-bind-ciphers PROFILE=SYSTEM
         ssl-default-server-ciphers PROFILE=SYSTEM
-    
     #---------------------------------------------------------------------
     # common defaults that all the 'listen' and 'backend' sections will
     # use if not designated in their block
@@ -71,41 +66,32 @@ de esta forma el VHOST podra saber cual es el ServerName que le corresponde
         timeout http-keep-alive 10s
         timeout check           10s
         maxconn                 3000
-    
     #---------------------------------------------------------------------
     # main frontend which proxys to the backends
     #---------------------------------------------------------------------
-    
     frontend http-in
         bind *:80
         acl sub1 hdr_sub(host) -i www.free.com
         acl sub2 hdr_sub(host) -i www.private.com
         acl sub3 hdr_sub(host) -i www.public.com
-    
         use_backend free_backend if sub1
         use_backend private_backend if sub2
         use_backend public_backend if sub3
-    
     #---------------------------------------------------------------------
     # round robin balancing between the various backends
     #---------------------------------------------------------------------
-    
     backend free_backend
         mode http
         option forwardfor
         #http-send-name-header Host
         http-request set-header Host www.free.com #if { srv_id 1 }
         server alpha_server 172.24.100.147:80
-    
-    
     backend private_backend
         mode http
         option forwardfor
         #http-send-name-header Host
         http-request set-header Host www.private.com #if { srv_id 1 }
         server alpha_server 172.24.100.147:80
-    
-    
     backend public_backend
         mode http
         option forwardfor
