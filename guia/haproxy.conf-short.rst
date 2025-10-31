@@ -35,16 +35,17 @@ defaults
 frontend intranet
         mode http
         bind :80
-        bind :443 ssl crt /etc/httpd/conf.d/certs/intranet.credicard.com.ve.pem
+        bind :443 ssl crt /etc/httpd/conf.d/certs/intranet.local.com.ve.pem
         http-request redirect scheme https unless { ssl_fc }
-        acl acl_admin path_beg /Intranet_Credicard
+        acl acl_admin path_beg /Intranet_local
         acl acl_Autogestion path_beg /Autogestion
         use_backend server_tomcat if acl_admin
         use_backend server_tomcat if acl_Autogestion
         default_backend server_intranet
 
 backend server_intranet
-        server lcsprdappintranet 10.132.0.232:9443 check inter 2s downinter 5s slowstart 60s rise 2 fall 3 ssl verify none
+        server lcsprdappintranet 10.10.10.1:9443 check inter 2s downinter 5s slowstart 60s rise 2 fall 3 ssl verify none
 
 backend server_tomcat
-        server lcsprdappintranet 10.132.0.232:8443 check inter 2s downinter 5s slowstart 60s rise 2 fall 3 ssl verify none
+        server lcsprdappintranet 10.10.10.1:8443 check inter 2s downinter 5s slowstart 60s rise 2 fall 3 ssl verify none
+
