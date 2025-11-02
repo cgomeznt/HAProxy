@@ -20,15 +20,15 @@ frontend https-fe-SNI
     capture request  header    X-Unique-ID          len 16
     mode http
 
-    # bind 10.134.4.62:9443 ssl crt /etc/ssl/ipgwebdes.mgmt.credicard.com.ve.pem verify none no-sslv3 force-tlsv12
-    bind 10.134.4.62:9443 ssl crt /etc/ssl/iswebdes.mgmt.credicard.com.ve.pem crt /etc/ssl/ipgwebdes.mgmt.credicard.com.ve.pem verify none no-sslv3 force-tlsv12
+    # bind 10.134.4.62:9443 ssl crt /etc/ssl/ipgwebdes.mgmt.local.com.ve.pem verify none no-sslv3 force-tlsv12
+    bind 10.134.4.62:9443 ssl crt /etc/ssl/iswebdes.mgmt.local.com.ve.pem crt /etc/ssl/ipgwebdes.mgmt.local.com.ve.pem verify none no-sslv3 force-tlsv12
 
     acl ipg_comercio_acl path_beg /tucuprueba
 
     # default_backend / ACL DEFINITIONS para definir cual fue el SNI seleccionado #
     use_backend bk_ipgwebdes_redirect if  ipg_comercio_acl  # Redirect if ACL
-    use_backend bk_ipgwebdes if { ssl_fc_sni ipgwebdes.mgmt.credicard.com.ve } # content switching based on SNI
-    use_backend bk_wso2is if { ssl_fc_sni iswebdes.mgmt.credicard.com.ve } # content switching based on SNI
+    use_backend bk_ipgwebdes if { ssl_fc_sni ipgwebdes.mgmt.local.com.ve } # content switching based on SNI
+    use_backend bk_wso2is if { ssl_fc_sni iswebdes.mgmt.local.com.ve } # content switching based on SNI
 
 #####################################################################
 #
@@ -95,11 +95,12 @@ backend bk_ipgwebdes_redirect
 
 
 
-https://ipgwebdes.mgmt.credicard.com.ve:9443/
-https://ipgwebdes.mgmt.credicard.com.ve:9443/comercio
+https://ipgwebdes.mgmt.local.com.ve:9443/
+https://ipgwebdes.mgmt.local.com.ve:9443/comercio
 
-https://iswebdes.mgmt.credicard.com.ve:9443/
+https://iswebdes.mgmt.local.com.ve:9443/
 
 
-https://iswebdes.mgmt.credicard.com.ve:9443/tucuprueba
-https://ipgwebdes.mgmt.credicard.com.ve:9443/tucuprueba
+https://iswebdes.mgmt.local.com.ve:9443/tucuprueba
+
+https://ipgwebdes.mgmt.local.com.ve:9443/tucuprueba
