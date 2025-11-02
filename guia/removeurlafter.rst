@@ -102,9 +102,9 @@ haproxy.conf, ejemplo de como haproxy, remueve 'sample' o lo remplaza por 'Autog
 	frontend intranet
 		mode http
 		bind :80
-		bind :443 ssl crt /etc/httpd/conf.d/certs/intranetqa.credicard.com.ve.pem
+		bind :443 ssl crt /etc/httpd/conf.d/certs/intranetqa.local.com.ve.pem
 		http-request redirect scheme https unless { ssl_fc }
-		acl acl_admin path_beg /Intranet_Credicard
+		acl acl_admin path_beg /Intranet_local
 		acl acl_Autogestion path_beg /Autogestion
 		acl acl_BI path_beg /BI/
 		use_backend server_tomcat if acl_admin
@@ -138,14 +138,14 @@ haproxy.conf, ejemplo de como haproxy, remueve 'sample' o lo remplaza por 'Autog
 
 	backend server_reserva
 		mode http
-		redirect location https://roomreser.credicard.com.ve:31900/
+		redirect location https://roomreser.local.com.ve:31900/
 		#server roomreser1 10.134.0.167:31900 check inter 2s downinter 5s slowstart 60s rise 2 fall 3 ssl verify none
 
 	backend server_BI
 		mode http
 		#option httpchk
 		#option forwardfor
-		#redirect location http://lcsqaapptableau.credicard.com.ve
+		#redirect location http://lcsqaapptableau.local.com.ve
 		#reqrep ^([^\ ]*\ /)BI[/]?(.*)     \1\2
 		#reqrep ^([^\ :]*)\ /BI[/]?(.*)  \1\ /signin/\2
 		reqrep ^([^\ ]*\ /)BI[/]?(.*)     \1\2
